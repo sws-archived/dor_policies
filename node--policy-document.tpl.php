@@ -116,11 +116,11 @@
 
            foreach ($content['field_policy_subsection']['#items'] as $k => $v) {                    
 
-                 $item = $content['field_policy_subsection'][$k]['entity']['field_collection_item'][$v['item_id']];
+                 $item = $content['field_policy_subsection'][$k]['entity']['field_collection_item'][$v['value']];
                  
-                 print "<a name=\"anchor-". $v['item_id']."\"></a>";
+                 print "<a name=\"anchor-". $v['value']."\"></a>";
 
-                 print "<div class=\"policy-subsection-container policy-subection-container-".$v['item_id']."\">";
+                 print "<div class=\"policy-subsection-container policy-subection-container-".$v['value']."\">";
 
 		                 print '<h2 class="policy-subsection-title" id="'. (isset($item['field_policy_subsection_title']['#items'][0]['value']) ? dor_policies_html_id($item['field_policy_subsection_title']['#items'][0]['value']) : "") .'">';
 		                 print "<span class=\"prefix-container\">";
@@ -143,11 +143,11 @@
 
                  foreach ($item['field_policy_subsection_child']['#items'] as $l => $w) {
 
-                 		$child_item = $item['field_policy_subsection_child'][$l]['entity']['field_collection_item'][$w['item_id']];
+                 		$child_item = $item['field_policy_subsection_child'][$l]['entity']['field_collection_item'][$w['value']];
 
-                 		print "<a name=\"anchor-". $v['item_id']."\"></a>";
+                 		print "<a name=\"anchor-". $v['value']."\"></a>";
 
-                 		print "<div class=\"policy-subsection-child-container policy-subection-child-container-".$w['item_id']."\">";
+                 		print "<div class=\"policy-subsection-child-container policy-subection-child-container-".$w['value']."\">";
 
 			                 print "<h3 class=\"policy-subsection-child-title\">";
 			                 print "<span class=\"prefix-container\">";
@@ -169,11 +169,11 @@
 
 			                  foreach ($child_item['field_policy_grandchildren']['#items'] as $m => $x) {
 
-			                 		$grandchild_item = $child_item['field_policy_grandchildren'][$m]['entity']['field_collection_item'][$x['item_id']];
+			                 		$grandchild_item = $child_item['field_policy_grandchildren'][$m]['entity']['field_collection_item'][$x['value']];
 
-			                 		print "<a name=\"anchor-". $v['item_id']."\"></a>";
+			                 		print "<a name=\"anchor-". $v['value']."\"></a>";
 
-			                 		print "<div class=\"policy-subsection-grandchild-container policy-subection-grandchild-container-". $x['item_id'] ."\">";
+			                 		print "<div class=\"policy-subsection-grandchild-container policy-subection-grandchild-container-". $x['value'] ."\">";
 
 						                 print "<h4 class=\"policy-subsection-grandchild-title\">";
 						                 print "<span class=\"prefix-container\">";

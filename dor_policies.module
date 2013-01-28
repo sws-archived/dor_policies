@@ -394,7 +394,7 @@ function dor_policies_generate_toc($field = 'field_policy_subsection', $f_title 
   
     foreach($field_obj[LANGUAGE_NONE] as $index => $entity_id) {
       if (is_array($entity_id)) {
-        $topic_ids[] = $entity_id['item_id'];
+        $topic_ids[] = $entity_id['value'];
       } else {
         $topic_ids[] = $entity_id;
       }
@@ -446,7 +446,7 @@ function dor_policies_generate_toc($field = 'field_policy_subsection', $f_title 
         $toc_links = true;
 
         // Generate the HTML ID.
-        $html_id = $entity->item_id;
+        $html_id = $entity->value;
 
         // Generate each list item with a link to the appropriate subsection.
         $output['toc']['links'][$topic_id] = array(
