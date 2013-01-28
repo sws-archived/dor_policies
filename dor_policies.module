@@ -1,0 +1,604 @@
+<?php
+/**
+ * @file
+ * Code for the Policies feature.
+ */
+
+include_once 'dor_policies.features.inc';
+
+
+/**
+ * Implement hook_block_info()
+ *
+ * Generate HTML for the user_role_summary block
+ * @returns block HTML
+ */
+function dor_policies_block_info() {
+	// set up an empty array which will contain the block contents
+	$blocks = array();
+
+	// Generate listing of blocks from this module, for the admin/block page
+	$blocks['rph_pager'] = array(
+		'info' => t('Pager for  Policies'),
+		'status' => 1,
+		'region' => 'sidebar_first'
+	);
+
+	$blocks['goto_rph'] = array(
+		'info' => t('GoTo Policies Form'),
+		'status' => 1,
+		'region' => 'sidebar_first'
+	);
+	
+	$blocks['policy_jumpto_block'] = array(
+		'info' => t('Policy Jumpto'),
+		'status' => 1,
+		'region' => 'sidebar_first'
+	);
+
+	// return the built content
+	return $blocks;
+}
+
+
+/**
+ * Implement hook_block_view()
+ *
+ * Generate HTML for the user_role_summary block
+ * @param op the operation from the URL
+ * @param delta offset
+ * @returns block HTML
+ */
+function dor_policies_block_view($delta=0) {
+
+	// set up an empty array which will contain the block contents
+	$block = array();
+
+	if($delta == 'rph_pager'){
+
+		// Generate our block content
+		$block['subject'] = "";
+		$block['content'] = dor_policies_return_pager();
+	}
+
+	else if($delta == 'goto_rph'){
+
+			// Generate our block content
+			$block['subject'] = "";
+			$block['content'] = dor_policies_return_goto_rph();
+		}
+		
+	else if($delta == 'policy_jumpto_block'){
+
+			// Generate our block content
+			$block['subject'] = "";
+			$block['content'] = dor_policies_generate_toc();
+		}
+
+
+	// return the built content
+	return $block;
+}
+
+
+/**
+ * @TODO: Document this function
+ */
+function dor_policies_return_pager() {
+  $content = '';
+  $path = '';
+  $nid = arg(1);
+  $prev_next_array = array();
+
+  if (is_numeric($nid)) {
+    if ($node = node_load($nid)) {
+    
+      if ($node->type == "policy_document") {
+        if (isset($node->field_parent_chapter[$node->language][0]['target_id'])) {
+          $parent_section_nid = $node->field_parent_chapter[$node->language][0]['target_id'];
+
+          $query = db_select('field_data_field_parent_chapter', 'pc');
+          $query->join('field_data_field_policy_number', 'pn', 'pn.entity_id = pc.entity_id');
+          $query->join('node', 'n', 'pn.entity_id = n.nid');
+          $query->fields('pc', array('entity_id', 'field_parent_chapter_target_id'));
+          $query->condition('pc.field_parent_chapter_target_id', $parent_section_nid);
+          $query->condition('n.status', 1);
+          $query->orderBy('pn.field_policy_number_value', 'ASC');
+          $result = $query->execute();
+
+          $prev_next_array = dor_policies_get_prev_next($result, $nid);
+        }
+      }
+      else if ($node->type == "policy_section") {
+      
+      	$parent_book_nid = false;
+      	
+      	if(isset($node->field_policy_book[$node->language][0]['target_id'])){
+					$parent_book_nid = $node->field_policy_book[$node->language][0]['target_id'];
+				}
+      
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_section_number', 'sn', 'sn.entity_id = n.nid');
+        $query->join('field_data_field_policy_book', 'pb', 'pb.entity_id = n.nid');
+        $query->fields('sn', array('entity_id', 'field_section_number_value'));
+        $query->condition('n.status', 1);
+        $query->condition('pb.field_policy_book_target_id', $parent_book_nid);
+        $query->orderBy('sn.field_section_number_value', 'ASC');
+
+        $result = $query->execute();
+        $prev_next_array = dor_policies_get_prev_next($result, $nid);
+      }
+    }
+  }
+
+  if ($prev_next_array) {
+    $content .= '<div class="rph-pager">';
+
+    $prev = $prev_next_array['prev'];
+    $next = $prev_next_array['next'];
+
+    if ($prev) {
+      $path = drupal_lookup_path('alias', "node/". $prev);
+      $content .= '<a class="prev-button" href="/'. $path .'">'. t("Prev") .'</a>';
+    }
+    else {
+      $content .= '<a class="prev-button">'. t("Prev") .'</a>';
+    }
+
+    if ($next) {
+      $path = drupal_lookup_path('alias', "node/". $next);
+      $content .= '<a class="next-button" href="/'. $path .'">'. t("Next") .'</a>';
+    }
+    else {
+      $content .= '<a class="next-button">'. t("Next") .'</a>';
+    }
+
+    $content .= '</div>'; // .rph-pager
+  }
+
+  return $content;
+}
+
+
+/**
+ * Returns Prev/Next markup for Related Policy sidebar
+ */
+function dor_policies_get_prev_next($result, $nid) {
+	$record_array = array();
+	$prev_nid = false;
+	$next_nid = false;
+	$entity_id = false;
+
+	while ($record = $result->fetchAssoc()) {
+		$record_array[] = $record['entity_id'];
+	}
+
+	for ($i=0; $i < count($record_array); $i++) {
+		$entity_id = $record_array[$i];
+
+		if ($entity_id == $nid){
+
+			if ($i > 0){
+				$prev_nid = $record_array[$i-1];
+			}
+
+			if (isset($record_array[$i+1])) {
+				$next_nid = $record_array[$i+1];
+			}
+		}
+	}
+
+	return array('prev' => $prev_nid, 'next' => $next_nid);
+}
+
+
+/**
+ * Returns container markup for RPH Policy/Section selection sidebar
+ */
+function dor_policies_return_goto_rph() {
+  $output = '';
+
+	drupal_add_js(drupal_get_path('module', 'dor_policies') .'/dor_policies.js');
+
+  $policy_info = dor_policies_return_policy_info();
+  
+
+  $book_title = "";
+  $book_abbreviation = "";
+  //this returns an error on pages where we're not in a book - jbickar
+  $book_node = node_load($policy_info['policy_book_nid']);
+  
+  if($book_node){
+	  $book_title = $book_node->title;
+	  if(isset($book_node->field_book_abbreviation[$book_node->language][0]['safe_value']))
+	  $book_abbreviation =$book_node->field_book_abbreviation[$book_node->language][0]['safe_value'];
+  }
+
+
+
+  $output .= '<div class="goto-rph-container">';
+  $output .= '<h2 class="pane-title">Go to <abbr title="'.$book_title.'">'.$book_abbreviation.'</abbr> Chapter:</h2>';
+  $output .= '<form action="#" method="GET" id="goto-rph-form">';
+
+  $form_results = dor_policies_get_jumpto_options($policy_info['policy_book_nid']);
+
+  $output .= '<div class="goto-rph">';
+
+  $output .= $form_results['sections'];
+  $output .= $form_results['policies'];
+
+  $output .= '</div>';
+  $output .= '<input class="goto-rph-submit" type="submit" name="submit" value="'. t("Go there") .'">';
+  $output .= '</form>';
+  $output .= '</div>';
+
+  return $output;
+}
+
+
+/**
+ * @TODO: Document this function
+ */
+function dor_policies_return_policy_info(){
+	
+	//first get the parent book
+	$nid = arg(1);
+	$policy_book_nid = false;
+	$policy_section_nid = false;
+
+	
+	$node = node_load($nid);
+	if($node){
+		
+		if($node->type == "policy_document"){
+		
+			if(isset($node->field_parent_chapter[$node->language][0]['entity']->nid)){
+				$policy_section_nid = $node->field_parent_chapter[$node->language][0]['entity']->nid;
+				
+				if(isset($node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'])){
+					$policy_book_nid = $node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'];
+				}
+			}
+		}
+		
+		if($node->type == "policy_section"){
+		
+			if(isset($node->nid)){
+				$policy_section_nid = $node->nid;
+				
+		
+				if(isset($node->field_policy_book[$node->language][0]['target_id'])){
+					$policy_book_nid = $node->field_policy_book[$node->language][0]['target_id'];
+				}
+			}
+		}
+		
+	}
+	
+	
+	return array('policy_book_nid'=>$policy_book_nid, 'policy_section_nid'=>$policy_section_nid);
+	
+}
+
+
+/**
+ * Returns drop-down markup for RPH Policy/Section selection sidebar
+ */
+function dor_policies_get_jumpto_options($parent_book_id = null){
+	global $base_url;
+
+	
+	if($parent_book_id){
+	
+	$policies = "<select class=\"rph-policies\" name=\"rph-policies\">";
+	$policies .= "<option value=\"\" selected>".t("Select a Policy")."</option>";
+
+	$sections = "<select class=\"rph-sections\" name=\"rph-sections\">";
+
+	$sections .= "<option value=\"\" selected>".t("Select a Chapter")."</option>";
+
+
+	$query = db_select('node', 'n');
+	$query->join('field_data_field_section_number', 'sn', 'sn.entity_id = n.nid');
+	$query->join('field_data_field_policy_book', 'pb', 'pb.entity_id = n.nid');
+	$query->join('field_data_field_computed_section_number','csn', 'n.vid = csn.revision_id');
+	$query->fields('sn', array('entity_id', 'field_section_number_value'));
+	$query->fields('n', array('title'));
+	$query->condition('n.status', 1);
+	$query->condition('pb.field_policy_book_target_id', $parent_book_id);
+	$query->orderBy('csn.field_computed_section_number_value', 'ASC');
+
+	$result = $query->execute();
+
+	while($record = $result->fetchAssoc()){
+
+		$path = drupal_lookup_path('alias', "node/".$record['entity_id']);
+		$sections .= "<option rel=\"".$record['entity_id']."\" value=\"$base_url/$path\">".$record['field_section_number_value'].". ".$record['title']."</option>";
+
+
+		$query2 = db_select('field_data_field_parent_chapter', 'pc');
+		$query2->join('field_data_field_policy_number', 'pn', 'pn.entity_id = pc.entity_id');
+		$query2->join('node', 'n', 'pn.entity_id = n.nid');
+		$query2->join('field_data_field_computed_policy_number','cpn', 'n.vid = cpn.revision_id');
+		$query2->fields('pn', array('field_policy_number_value'));
+		$query2->fields('pc', array('entity_id', 'field_parent_chapter_target_id'));
+		$query2->fields('n', array('title'));
+		$query2->condition('pc.field_parent_chapter_target_id', $record['entity_id']);
+		$query2->condition('n.status', 1);
+		$query2->orderBy('cpn.field_computed_policy_number_value', 'ASC');
+		$result2 = $query2->execute();
+
+		while($record2 = $result2->fetchAssoc()){
+			$path2 = drupal_lookup_path('alias', "node/".$record2['entity_id']);
+			$policies .= "<option class=\"".$record['entity_id']."\" value=\"$base_url/$path2\">".$record['field_section_number_value'].".".$record2['field_policy_number_value']." ".$record2['title']."</option>";
+		}
+
+	}
+
+	$sections .= "</select>";
+	$policies .= "</select>";
+
+	return array('sections'=>$sections, 'policies'=>$policies);
+	
+	}
+
+}
+
+
+/**
+ * Helper function to generate a render array that outputs the 'jump to' ToC
+ */
+function dor_policies_generate_toc($field = 'field_policy_subsection', $f_title = 'field_policy_subsection_title') {
+
+	$nid = arg(1);
+	$node = false;
+	
+	$hide_formatting = false;
+	
+	if(is_numeric($nid)){
+		$node = node_load($nid);
+
+    if(isset($node->field_hide_bullet_formatting[$node->language][0]['value'])){
+			if($node->field_hide_bullet_formatting[$node->language][0]['value']){
+				$hide_formatting = true;
+				}
+			}
+
+		
+	}
+	
+	if(!$node){
+		return '';
+	}
+	
+  $output = array();
+  $topic_ids = array();
+  $field_topics = array();
+  
+  // If node has a value for field_suppress_jump_to_template, we suppress the toc
+  $supress = 0;
+  if (isset($node->field_suppress_jump_to_template[LANGUAGE_NONE])) {
+    foreach ($node->field_suppress_jump_to_template[LANGUAGE_NONE] as $index => $entity){
+      if (is_array($entity)) {
+        $supress = array_pop($entity);
+      }
+    }
+  }
+  
+  if (!isset($node->$field)) {return '';}
+  
+  // Loop through the node and collect all of the field_collection_item entity IDs
+  $field_obj = $node->$field;
+  
+  if (isset($field_obj[LANGUAGE_NONE]) && !$supress) {
+  
+    foreach($field_obj[LANGUAGE_NONE] as $index => $entity_id) {
+      if (is_array($entity_id)) {
+        $topic_ids[] = $entity_id['item_id'];
+      } else {
+        $topic_ids[] = $entity_id;
+      }
+    }
+  
+  
+    // Load the entities whose IDs we just collected.
+    $field_topics = entity_load('field_collection_item', $topic_ids);
+  
+    // Generate the beginning and end of the ToC
+    $output['toc'] = array(
+      '#prefix' => '<div id="toc">',
+      '#suffix' => '</div>',
+    );
+  
+    // Generate the heading for the ToC.
+    $output['toc']['title'] = array(
+      '#theme' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => 'Jump To:',
+    );
+  
+    // Generate the container for each jump-to item
+    $output['toc']['links'] = array(
+      '#prefix' => '<ul>',
+      '#suffix' => '</ul>',
+    );
+    
+    $toc_links = false;
+    
+    $i=1;
+  
+    // Iterate through loaded entities and build ToC links.
+    foreach ($field_topics as $topic_id => $entity) {
+
+      // We'll use this twice so just store it.
+      $entity_title_obj = $entity->$f_title;
+
+      if (isset($entity_title_obj[LANGUAGE_NONE][0]['value'])) {
+
+        if(!$hide_formatting){
+	        $entity_title = "$i. ";
+        }
+        else{
+	        $entity_title = "";
+        }
+
+        $entity_title .= $entity_title_obj[LANGUAGE_NONE][0]['value'];
+        $toc_links = true;
+
+        // Generate the HTML ID.
+        $html_id = $entity->item_id;
+
+        // Generate each list item with a link to the appropriate subsection.
+        $output['toc']['links'][$topic_id] = array(
+          '#prefix' => '<li>',
+          '#theme' => 'html_tag',
+          '#attributes' => array('href' => '#anchor-'. $html_id),
+          '#tag' => 'a',
+          '#value' => $entity_title,
+          '#suffix' => '</li>',
+        );
+      }
+      $i++;
+    }
+
+    //if we didn't render any links, supress container
+    if (!$toc_links) {
+      unset($output['toc']);
+    }
+  }
+
+  return $output;
+}
+
+
+/**
+ * Helper function to generate HTML IDs from field_topic_title fields.
+ *
+ * Forces the string to lowercase and replaces spaces with dashes.
+ */
+function dor_policies_html_id($nid) {
+  return str_replace(' ', '-', strtolower($nid));
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * @TODO: Document this function
+ * @TODO: Remove after resolution of http://drupal.org/node/1788222
+ */
+function dor_policies_form_policy_document_node_form_alter(&$form, &$form_state, $form_id){
+  $field_name1 = 'field_policy_subsection';
+  $field_name2 = 'field_policy_subsection_child';
+  $field_name3 = 'field_policy_grandchildren';
+
+  if (empty($form[$field_name1])) {
+    return;
+  }
+
+  $field_language = $form[$field_name1]['#language'];
+  $max_delta1 = $form[$field_name1][$field_language]['#max_delta'];
+
+  foreach ($form[$field_name1][$field_language] as $key1 => $subsection1) {
+    if (is_int($key1)) {
+      $max_delta2 = $form[$field_name1][$field_language][$key1][$field_name2][$field_language]['#max_delta'];
+
+      foreach ($form[$field_name1][$field_language][$key1][$field_name2][$field_language] as $key2 => $subsection2) {
+        if (is_int($key2)) {
+          $max_delta3 = $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$key2][$field_name3][$field_language]['#max_delta'];
+
+          if (is_int($max_delta3)) {
+            //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
+            $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$key2][$field_name3][$field_language][$max_delta3] = array();
+          }
+        }
+      }
+
+      //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
+      $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$max_delta2] = array();
+    }
+  }
+
+  //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
+  $form[$field_name1][$field_language][$max_delta1] = array();
+}
+
+
+/**
+ * Implements hook_theme_registry_alter()
+**/
+function dor_policies_theme_registry_alter(&$theme_registry) {
+  $mod_path = drupal_get_path('module', 'dor_policies');
+  $theme_registry_copy = $theme_registry;       // munge on a copy
+  _theme_process_registry($theme_registry_copy, 'phptemplate', 'theme_engine', 'pow', $mod_path);
+  $theme_registry += array_diff_key($theme_registry_copy, $theme_registry);
+  $hooks = array('node');
+  foreach ($hooks as $h) {
+    _dor_policies_insert_after_first_element($theme_registry[$h]['theme paths'], $mod_path);
+  }
+}
+
+/**
+ * Helper function for re-ordering arrays (needed by theme_registry_alter)
+*/
+function _dor_policies_insert_after_first_element(&$a, $element) {
+  if(is_array($a)) {
+    $first_element = array_shift($a);
+    array_unshift($a, $first_element, $element);
+  }
+}
+
+
+function dor_policies_preprocess_node(&$vars, $hook) {
+	if($vars['type'] == 'policy_book') {
+		$vars['section_view'] = views_embed_view('dor_policy_section_listing','block_1');
+		
+	}
+	if($vars['type'] == 'policy_section') {
+		$vars['title'] = '1' . $vars['title'];
+		$vars['document_view'] = views_embed_view('dor_policy_document_listing','block_2');
+	}
+
+	// Check formatting conditions
+	if ($vars['type'] == 'policy_document') {		
+		$vars['hide_formatting'] = false;
+		if(isset($vars['field_hide_bullet_formatting'][$vars['language']][0]['value'])){
+			if($vars['field_hide_bullet_formatting'][$vars['language']][0]['value']){
+				$vars['hide_formatting'] = true;
+			}
+		}
+		
+    $options = array(
+      'scope' => 'footer',
+    );	
+  }
+}
+
+function dor_policies_preprocess_page(&$vars, $hook) {
+	if(arg(0) == 'policies') {
+		drupal_add_css(base_path() . drupal_get_path('module','dor_policies') . '/dor_policies.css',
+			array('type'=>'file','group'=>CSS_DEFAULT,'preprocess'=> FALSE));
+	}
+	
+	if(isset($vars['node'])) {
+		$node = $vars['node'];
+		
+		$types = array("policy_book", "policy_section", "policy_document");
+		if(in_array($node->type, $types)) {
+			drupal_add_css(base_path() . drupal_get_path('module','dor_policies') . '/dor_policies.css',
+				array('type'=>'file','group'=>CSS_DEFAULT,'preprocess'=> FALSE));
+		}
+	
+		if($node->type == 'policy_document') {
+			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_computed_section_number['und'][0]['value'];
+			$policy_number = $node->field_computed_policy_number['und'][0]['value'];
+			
+			$title = $section_number . "." . $policy_number . " " . drupal_get_title();
+			drupal_set_title($title);
+		}
+		if($node->type == 'policy_section') {
+			$title = $node->field_computed_section_number['und'][0]['value'] . ". " . drupal_get_title();
+			drupal_set_title($title);
+		}
+	}
+}
