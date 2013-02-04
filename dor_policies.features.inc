@@ -55,9 +55,9 @@ function dor_policies_node_info() {
       'help' => '',
     ),
     'policy_section' => array(
-      'name' => t('Policy Section'),
+      'name' => t('Policy Chapter'),
       'base' => 'node_content',
-      'description' => t('A <b>Policy Section</b> is a group of Policy Documents within a Policy Manual.'),
+      'description' => t('A <b>Policy Chapter</b> is a group of Policy Documents within a Policy Manual.'),
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
