@@ -31,12 +31,12 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['pager']['type'] = 'none';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'fields';
-  /* Relationship: Entity Reference: Referencing entity */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['id'] = 'reverse_field_policy_book_node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['table'] = 'node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['field'] = 'reverse_field_policy_book_node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['required'] = 1;
-  /* Relationship: Entity Reference: Referenced Entity */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_policy_book_target_id']['id'] = 'field_policy_book_target_id';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['table'] = 'field_data_field_policy_book';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['field'] = 'field_policy_book_target_id';
@@ -68,7 +68,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['title_1']['empty_zero'] = 0;
   $handler->display->display_options['fields']['title_1']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['title_1']['link_to_node'] = 0;
-  /* Field: Content: Chapter number */
+  /* Field: Content: Section number */
   $handler->display->display_options['fields']['field_section_number']['id'] = 'field_section_number';
   $handler->display->display_options['fields']['field_section_number']['table'] = 'field_data_field_section_number';
   $handler->display->display_options['fields']['field_section_number']['field'] = 'field_section_number';
@@ -153,7 +153,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['title']['empty_zero'] = 0;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['title']['link_to_node'] = 1;
-  /* Sort criterion: Content: Computed Section Number (field_computed_section_number) */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['field_computed_section_number_value']['id'] = 'field_computed_section_number_value';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['table'] = 'field_data_field_computed_section_number';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['field'] = 'field_computed_section_number_value';
@@ -189,7 +189,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['defaults']['header'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Chapter number */
+  /* Field: Content: Section number */
   $handler->display->display_options['fields']['field_section_number']['id'] = 'field_section_number';
   $handler->display->display_options['fields']['field_section_number']['table'] = 'field_data_field_section_number';
   $handler->display->display_options['fields']['field_section_number']['field'] = 'field_section_number';
@@ -241,7 +241,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['title']['empty_zero'] = 0;
   $handler->display->display_options['fields']['title']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['title']['link_to_node'] = 1;
-  /* Field: Content: Computed Section Number */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['field_computed_section_number']['id'] = 'field_computed_section_number';
   $handler->display->display_options['fields']['field_computed_section_number']['table'] = 'field_data_field_computed_section_number';
   $handler->display->display_options['fields']['field_computed_section_number']['field'] = 'field_computed_section_number';
@@ -265,9 +265,8 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['field_computed_section_number']['hide_empty'] = 0;
   $handler->display->display_options['fields']['field_computed_section_number']['empty_zero'] = 0;
   $handler->display->display_options['fields']['field_computed_section_number']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['field_computed_section_number']['field_api_classes'] = 0;
   $handler->display->display_options['defaults']['arguments'] = FALSE;
-  /* Contextual filter: Content: Policy Book (field_policy_book) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_policy_book_target_id']['id'] = 'field_policy_book_target_id';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['table'] = 'field_data_field_policy_book';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['field'] = 'field_policy_book_target_id';
@@ -277,8 +276,6 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_policy_book_target_id']['break_phrase'] = 0;
-  $handler->display->display_options['arguments']['field_policy_book_target_id']['not'] = 0;
 
   /* Display: Policy Document Chapter Listing */
   $handler = $view->new_display('entityreference', 'Policy Document Chapter Listing', 'entityreference_1');
@@ -301,7 +298,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['row_options']['default_field_elements'] = 1;
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Entity Reference: Referenced Entity */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_policy_book_target_id']['id'] = 'field_policy_book_target_id';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['table'] = 'field_data_field_policy_book';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['field'] = 'field_policy_book_target_id';
@@ -312,7 +309,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['sorts']['title']['table'] = 'node';
   $handler->display->display_options['sorts']['title']['field'] = 'title';
   $handler->display->display_options['sorts']['title']['relationship'] = 'field_policy_book_target_id';
-  /* Sort criterion: Content: Computed Section Number (field_computed_section_number) */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['field_computed_section_number_value']['id'] = 'field_computed_section_number_value';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['table'] = 'field_data_field_computed_section_number';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['field'] = 'field_computed_section_number_value';
@@ -351,7 +348,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['relationships']['field_parent_chapter_target_id']['field'] = 'field_parent_chapter_target_id';
   $handler->display->display_options['relationships']['field_parent_chapter_target_id']['relationship'] = 'reverse_field_parent_chapter_node';
   $handler->display->display_options['relationships']['field_parent_chapter_target_id']['required'] = 1;
-  /* Field: Content: Chapter number */
+  /* Field: Content: Section number */
   $handler->display->display_options['fields']['field_section_number']['id'] = 'field_section_number';
   $handler->display->display_options['fields']['field_section_number']['table'] = 'field_data_field_section_number';
   $handler->display->display_options['fields']['field_section_number']['field'] = 'field_section_number';
@@ -527,7 +524,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['style_options']['override'] = 1;
   $handler->display->display_options['style_options']['sticky'] = 0;
   $handler->display->display_options['style_options']['empty_table'] = 0;
-  /* Field: Content: Chapter number */
+  /* Field: Content: Section number */
   $handler->display->display_options['fields']['field_section_number']['id'] = 'field_section_number';
   $handler->display->display_options['fields']['field_section_number']['table'] = 'field_data_field_section_number';
   $handler->display->display_options['fields']['field_section_number']['field'] = 'field_section_number';
@@ -634,7 +631,7 @@ function dor_policies_views_default_views() {
     'trim_length' => '600',
   );
   $handler->display->display_options['fields']['body']['field_api_classes'] = 0;
-  /* Field: Global: View */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['view']['id'] = 'view';
   $handler->display->display_options['fields']['view']['table'] = 'views';
   $handler->display->display_options['fields']['view']['field'] = 'view';
@@ -647,14 +644,11 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['view']['hide_empty'] = 1;
   $handler->display->display_options['fields']['view']['empty_zero'] = 0;
   $handler->display->display_options['fields']['view']['hide_alter_empty'] = 0;
-  $handler->display->display_options['fields']['view']['view'] = 'dor_policy_document_listing';
-  $handler->display->display_options['fields']['view']['display'] = 'block_2';
-  $handler->display->display_options['fields']['view']['arguments'] = '[nid]';
-  /* Sort criterion: Content: Computed Section Number (field_computed_section_number) */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['field_computed_section_number_value']['id'] = 'field_computed_section_number_value';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['table'] = 'field_data_field_computed_section_number';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['field'] = 'field_computed_section_number_value';
-  /* Contextual filter: Content: Policy Book (field_policy_book) */
+  /* Contextual filter: Broken/missing handler */
   $handler->display->display_options['arguments']['field_policy_book_target_id']['id'] = 'field_policy_book_target_id';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['table'] = 'field_data_field_policy_book';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['field'] = 'field_policy_book_target_id';
@@ -664,8 +658,6 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary']['number_of_records'] = '0';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary']['format'] = 'default_summary';
   $handler->display->display_options['arguments']['field_policy_book_target_id']['summary_options']['items_per_page'] = '25';
-  $handler->display->display_options['arguments']['field_policy_book_target_id']['break_phrase'] = 0;
-  $handler->display->display_options['arguments']['field_policy_book_target_id']['not'] = 0;
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -699,19 +691,19 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['defaults']['relationships'] = FALSE;
-  /* Relationship: Entity Reference: Referenced Entity */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['field_policy_book_target_id']['id'] = 'field_policy_book_target_id';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['table'] = 'field_data_field_policy_book';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['field'] = 'field_policy_book_target_id';
   $handler->display->display_options['relationships']['field_policy_book_target_id']['required'] = 1;
-  /* Relationship: Entity Reference: Referencing entity */
+  /* Relationship: Broken/missing handler */
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['id'] = 'reverse_field_policy_book_node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['table'] = 'node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['field'] = 'reverse_field_policy_book_node';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['relationship'] = 'field_policy_book_target_id';
   $handler->display->display_options['relationships']['reverse_field_policy_book_node']['required'] = 1;
   $handler->display->display_options['defaults']['fields'] = FALSE;
-  /* Field: Content: Chapter number */
+  /* Field: Content: Section number */
   $handler->display->display_options['fields']['field_section_number']['id'] = 'field_section_number';
   $handler->display->display_options['fields']['field_section_number']['table'] = 'field_data_field_section_number';
   $handler->display->display_options['fields']['field_section_number']['field'] = 'field_section_number';
@@ -790,7 +782,7 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['nid']['hide_alter_empty'] = 1;
   $handler->display->display_options['fields']['nid']['link_to_node'] = 0;
   $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Content: Computed Section Number (field_computed_section_number) */
+  /* Sort criterion: Broken/missing handler */
   $handler->display->display_options['sorts']['field_computed_section_number_value']['id'] = 'field_computed_section_number_value';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['table'] = 'field_data_field_computed_section_number';
   $handler->display->display_options['sorts']['field_computed_section_number_value']['field'] = 'field_computed_section_number_value';
@@ -913,7 +905,7 @@ function dor_policies_views_default_views() {
     'trim_length' => '600',
   );
   $handler->display->display_options['fields']['body']['field_api_classes'] = 0;
-  /* Field: Global: View */
+  /* Field: Broken/missing handler */
   $handler->display->display_options['fields']['view']['id'] = 'view';
   $handler->display->display_options['fields']['view']['table'] = 'views';
   $handler->display->display_options['fields']['view']['field'] = 'view';
@@ -924,9 +916,6 @@ function dor_policies_views_default_views() {
   $handler->display->display_options['fields']['view']['hide_empty'] = 1;
   $handler->display->display_options['fields']['view']['empty_zero'] = 0;
   $handler->display->display_options['fields']['view']['hide_alter_empty'] = 1;
-  $handler->display->display_options['fields']['view']['view'] = 'dor_policy_chapter_listing';
-  $handler->display->display_options['fields']['view']['display'] = 'block_1';
-  $handler->display->display_options['fields']['view']['arguments'] = '[nid]';
   /* Sort criterion: Content: Title */
   $handler->display->display_options['sorts']['title']['id'] = 'title';
   $handler->display->display_options['sorts']['title']['table'] = 'node';
