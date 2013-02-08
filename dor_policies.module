@@ -139,7 +139,8 @@ function dor_policies_return_pager() {
 
     if ($prev) {
       $path = drupal_lookup_path('alias', "node/". $prev);
-      $content .= '<a class="prev-button" href="/'. $path .'">'. t("Prev") .'</a>';
+//      $content .= '<a class="prev-button" href="/adminguide-dev/'. $path .'">'. t("Prev") .'</a>';
+      $content .= l(t("Prev"), $path, array('attributes' => array('class' => 'prev-button')));
     }
     else {
       $content .= '<a class="prev-button">'. t("Prev") .'</a>';
@@ -147,7 +148,8 @@ function dor_policies_return_pager() {
 
     if ($next) {
       $path = drupal_lookup_path('alias', "node/". $next);
-      $content .= '<a class="next-button" href="/'. $path .'">'. t("Next") .'</a>';
+//      $content .= '<a class="next-button" href="/adminguide-dev/'. $path .'">'. t("Next") .'</a>';
+      $content .= l(t("Next"), $path, array('attributes' => array('class' => 'next-button')));
     }
     else {
       $content .= '<a class="next-button">'. t("Next") .'</a>';
@@ -206,6 +208,7 @@ function dor_policies_return_goto_rph() {
   $book_title = "";
   $book_abbreviation = "";
   //this returns an error on pages where we're not in a book - jbickar
+  //dpm($policy_info);
   $book_node = node_load($policy_info['policy_book_nid']);
   
   if($book_node){
@@ -251,14 +254,22 @@ function dor_policies_return_policy_info(){
 	if($node){
 		
 		if($node->type == "policy_document"){
-		
-			if(isset($node->field_parent_chapter[$node->language][0]['entity']->nid)){
-				$policy_section_nid = $node->field_parent_chapter[$node->language][0]['entity']->nid;
+	//change to node_load() - jbickar
+      //dpm($node);
+      if(isset($node->field_parent_chapter['und'][0]['target_id'])){
+ 			  $policy_section_nid = $node->field_parent_chapter['und'][0]['target_id'];
+ 			  $parent_chapter_node = node_load($policy_section_nid);
+ 			  $policy_book_nid = $parent_chapter_node->field_policy_book['und'][0]['target_id'];
+ 			}
+
+
+//			if(isset($node->field_parent_chapter[$node->language][0]['entity']->nid)){
+//				$policy_section_nid = $node->field_parent_chapter[$node->language][0]['entity']->nid;
 				
-				if(isset($node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'])){
-					$policy_book_nid = $node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'];
-				}
-			}
+//				if(isset($node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'])){
+//					$policy_book_nid = $node->field_parent_chapter[$node->language][0]['entity']->field_policy_book[$node->field_parent_chapter[$node->language][0]['entity']->language][0]['target_id'];
+//				}
+//			}
 		}
 		
 		if($node->type == "policy_section"){
@@ -446,7 +457,7 @@ function dor_policies_generate_toc($field = 'field_policy_subsection', $f_title 
         $toc_links = true;
 
         // Generate the HTML ID.
-        $html_id = $entity->value;
+        $html_id = $entity->item_id;
 
         // Generate each list item with a link to the appropriate subsection.
         $output['toc']['links'][$topic_id] = array(
@@ -487,7 +498,8 @@ function dor_policies_html_id($nid) {
  * @TODO: Document this function
  * @TODO: Remove after resolution of http://drupal.org/node/1788222
  */
-function dor_policies_form_policy_document_node_form_alter(&$form, &$form_state, $form_id){
+//commenting out in preparation for removal - jbickar
+/*function dor_policies_form_policy_document_node_form_alter(&$form, &$form_state, $form_id){
   $field_name1 = 'field_policy_subsection';
   $field_name2 = 'field_policy_subsection_child';
   $field_name3 = 'field_policy_grandchildren';
@@ -521,7 +533,7 @@ function dor_policies_form_policy_document_node_form_alter(&$form, &$form_state,
 
   //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
   $form[$field_name1][$field_language][$max_delta1] = array();
-}
+}*/
 
 
 /**
@@ -590,7 +602,16 @@ function dor_policies_preprocess_page(&$vars, $hook) {
 		}
 	
 		if($node->type == 'policy_document') {
-			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_computed_section_number['und'][0]['value'];
+			//change section number to integer
+			//dsm($node);
+			//change field_policy_number to integer and see if it works
+			// node_load nid from target_id
+			$parent_chapter_id = $node->field_parent_chapter['und'][0]['target_id'];
+			$parent_chapter_node = node_load($parent_chapter_id);
+			$section_number = $parent_chapter_node->field_section_number['und'][0]['value'];
+//			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_policy_number['und'][0]['value'];
+			
+//			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_computed_section_number['und'][0]['value'];
 			$policy_number = $node->field_computed_policy_number['und'][0]['value'];
 			
 			$title = $section_number . "." . $policy_number . " " . drupal_get_title();

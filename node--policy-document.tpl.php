@@ -145,7 +145,7 @@
 
                  		$child_item = $item['field_policy_subsection_child'][$l]['entity']['field_collection_item'][$w['value']];
 
-                 		print "<a name=\"anchor-". $v['value']."\"></a>";
+                 		print "<a name=\"anchor-" . $v['value']."\"></a>";
 
                  		print "<div class=\"policy-subsection-child-container policy-subection-child-container-".$w['value']."\">";
 
@@ -171,7 +171,7 @@
 
 			                 		$grandchild_item = $child_item['field_policy_grandchildren'][$m]['entity']['field_collection_item'][$x['value']];
 
-			                 		print "<a name=\"anchor-". $v['value']."\"></a>";
+			                 		print "<a name=\"anchor-" . $v['value']."\"></a>";
 
 			                 		print "<div class=\"policy-subsection-grandchild-container policy-subection-grandchild-container-". $x['value'] ."\">";
 
