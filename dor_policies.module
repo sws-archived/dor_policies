@@ -312,12 +312,12 @@ function dor_policies_get_jumpto_options($parent_book_id = null){
 	$query = db_select('node', 'n');
 	$query->join('field_data_field_section_number', 'sn', 'sn.entity_id = n.nid');
 	$query->join('field_data_field_policy_book', 'pb', 'pb.entity_id = n.nid');
-	$query->join('field_data_field_computed_section_number','csn', 'n.vid = csn.revision_id');
+	$query->join('field_data_field_section_number','csn', 'n.vid = csn.revision_id');
 	$query->fields('sn', array('entity_id', 'field_section_number_value'));
 	$query->fields('n', array('title'));
 	$query->condition('n.status', 1);
 	$query->condition('pb.field_policy_book_target_id', $parent_book_id);
-	$query->orderBy('csn.field_computed_section_number_value', 'ASC');
+	$query->orderBy('csn.field_section_number_value', 'ASC');
 
 	$result = $query->execute();
 
@@ -330,13 +330,13 @@ function dor_policies_get_jumpto_options($parent_book_id = null){
 		$query2 = db_select('field_data_field_parent_chapter', 'pc');
 		$query2->join('field_data_field_policy_number', 'pn', 'pn.entity_id = pc.entity_id');
 		$query2->join('node', 'n', 'pn.entity_id = n.nid');
-		$query2->join('field_data_field_computed_policy_number','cpn', 'n.vid = cpn.revision_id');
+		$query2->join('field_data_field_policy_number','cpn', 'n.vid = cpn.revision_id');
 		$query2->fields('pn', array('field_policy_number_value'));
 		$query2->fields('pc', array('entity_id', 'field_parent_chapter_target_id'));
 		$query2->fields('n', array('title'));
 		$query2->condition('pc.field_parent_chapter_target_id', $record['entity_id']);
 		$query2->condition('n.status', 1);
-		$query2->orderBy('cpn.field_computed_policy_number_value', 'ASC');
+		$query2->orderBy('cpn.field_policy_number_value', 'ASC');
 		$result2 = $query2->execute();
 
 		while($record2 = $result2->fetchAssoc()){
@@ -602,23 +602,24 @@ function dor_policies_preprocess_page(&$vars, $hook) {
 		}
 	
 		if($node->type == 'policy_document') {
-			//change section number to integer
-			//dsm($node);
-			//change field_policy_number to integer and see if it works
-			// node_load nid from target_id
+		  //dpm($node);
+      //get nid of parent chapter node
 			$parent_chapter_id = $node->field_parent_chapter['und'][0]['target_id'];
+			// load parent chapter node
 			$parent_chapter_node = node_load($parent_chapter_id);
-			$section_number = $parent_chapter_node->field_section_number['und'][0]['value'];
-//			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_policy_number['und'][0]['value'];
+			// get parent chapter number
+			$chapter_number = $parent_chapter_node->field_section_number['und'][0]['value'];
+			// get subchapter number
+			$subchapter_number = $node->field_policy_subchapter['und'][0]['value'];
+			// get policy number
+			$policy_number = $node->field_policy_number['und'][0]['value'];
 			
-//			$section_number = $node->field_parent_chapter['und'][0]['entity']->field_computed_section_number['und'][0]['value'];
-			$policy_number = $node->field_computed_policy_number['und'][0]['value'];
-			
-			$title = $section_number . "." . $policy_number . " " . drupal_get_title();
+			$title = $chapter_number . "." . $subchapter_number . "." . $policy_number . " " . drupal_get_title();
 			drupal_set_title($title);
 		}
+		//machine name for "Chapter" is policy_section, due to inheritance from DoR Feature
 		if($node->type == 'policy_section') {
-			$title = $node->field_computed_section_number['und'][0]['value'] . ". " . drupal_get_title();
+			$title = $node->field_section_number['und'][0]['value'] . ". " . drupal_get_title();
 			drupal_set_title($title);
 		}
 	}
