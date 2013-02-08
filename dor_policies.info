@@ -8,6 +8,7 @@ project = dor_policies
 dependencies[] = computed_field
 dependencies[] = ctools
 dependencies[] = date
+dependencies[] = entity_token
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = field_collection
