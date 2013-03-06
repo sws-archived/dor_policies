@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Default theme implementation to display a node.
@@ -85,14 +84,11 @@
 
 	<?php print render($title_prefix); ?>
 		<?php if (!$page): ?>
-		  <?php (isset($node->field_parent_chapter['und'][0]['entity']->field_section_number['und'][0]['value']) ? $section = $node->field_parent_chapter['und'][0]['entity']->field_section_number['und'][0]['value'] : $section = ""); ?>
-		  <?php (isset($node->field_policy_number['und'][0]['value']) ? $policy = $node->field_policy_number['und'][0]['value'] : $policy = ""); ?>
-			<h2<?php print $title_attributes; ?>><?php print $section . '.' . $policy . ' ' . $title; ?></h2>
+			<h2<?php print $title_attributes; ?>><?php print $title; ?></h2>
 			<?php endif; ?>
 	<?php print render($title_suffix); ?>
 	
 	<div class="content" <?php print $content_attributes; ?>>
-
 	<?php print render($content['field_policy_current_version']); ?>
 
 	<?php print render($content['body']); ?>
@@ -102,10 +98,6 @@
 	<?php
 		$block = module_invoke('dor_policies', 'block_view', 'policy_jumpto_block');
 	  print render($block);
-
-	?>
-
-<?php
 
 
 			$alphabet = range('a','z');
