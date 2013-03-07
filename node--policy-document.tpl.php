@@ -92,7 +92,18 @@
 	<?php print render($content['field_policy_current_version']); ?>
 
 	<?php print render($content['body']); ?>
+
+	<?php print render($content['field_policy_former_number']); ?>
 	
+	<?php print render($content['field_policy_authority']); ?>
+	<?php print render($content['field_policy_applicability']); ?>
+	<?php print render($content['field_policy_responsibility']); ?>
+	<?php print render($content['field_policy_statement']); ?>
+	<?php print render($content['field_policy_purpose']); ?>
+	<?php print render($content['field_policy_guide_supervisors']); ?>
+	<?php print render($content['field_policy_footnote']); ?>
+	<?php print render($content['field_policy_attachments']); ?>
+	<?php print render($content['field_policy_related']); ?>
 	<?php print render($content['field_auth_cont']); ?>
 	
 	<?php
