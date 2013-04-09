@@ -95,10 +95,6 @@
 	
 
 	<?php print render($content); ?>
-	<?php if(!empty($document_view)) { ?>
-		<h2>Policies:</h2>
-		<?php print $document_view; ?>
-	<?php } ?>       		
 
 		<?php print render($content['links']); ?><?php print render($content['comments']); ?>
 		
