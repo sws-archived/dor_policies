@@ -96,10 +96,6 @@
 
 	<?php print render($content); ?>
 	
-	<?php if(!empty($section_view)) { ?>
-		<h2>Chapter Listing</h2>
-		<?php print $section_view; ?>
-	<?php } ?>       		
 
 		<?php print render($content['links']); ?><?php print render($content['comments']); ?>
 		
