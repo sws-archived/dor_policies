@@ -491,51 +491,6 @@ function dor_policies_html_id($nid) {
   return str_replace(' ', '-', strtolower($nid));
 }
 
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * @TODO: Document this function
- * @TODO: Remove after resolution of http://drupal.org/node/1788222
- */
-//commenting out in preparation for removal - jbickar
-/*function dor_policies_form_policy_document_node_form_alter(&$form, &$form_state, $form_id){
-  $field_name1 = 'field_policy_subsection';
-  $field_name2 = 'field_policy_subsection_child';
-  $field_name3 = 'field_policy_grandchildren';
-
-  if (empty($form[$field_name1])) {
-    return;
-  }
-
-  $field_language = $form[$field_name1]['#language'];
-  $max_delta1 = $form[$field_name1][$field_language]['#max_delta'];
-
-  foreach ($form[$field_name1][$field_language] as $key1 => $subsection1) {
-    if (is_int($key1)) {
-      $max_delta2 = $form[$field_name1][$field_language][$key1][$field_name2][$field_language]['#max_delta'];
-
-      foreach ($form[$field_name1][$field_language][$key1][$field_name2][$field_language] as $key2 => $subsection2) {
-        if (is_int($key2)) {
-          $max_delta3 = $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$key2][$field_name3][$field_language]['#max_delta'];
-
-          if (is_int($max_delta3)) {
-            //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
-            $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$key2][$field_name3][$field_language][$max_delta3] = array();
-          }
-        }
-      }
-
-      //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
-      $form[$field_name1][$field_language][$key1][$field_name2][$field_language][$max_delta2] = array();
-    }
-  }
-
-  //if you unset rather than set to an empty array, you'll get json errors when you use ajax remove...
-  $form[$field_name1][$field_language][$max_delta1] = array();
-}*/
-
-
 /**
  * Implements hook_theme_registry_alter()
 **/
