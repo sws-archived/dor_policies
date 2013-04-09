@@ -105,6 +105,7 @@
 	<?php print render($content['field_policy_attachments']); ?>
 	<?php print render($content['field_policy_related']); ?>
 	<?php print render($content['field_auth_cont']); ?>
+	<?php print render($content['field_policy_tags']); ?>
 	
 	<?php
 		$block = module_invoke('dor_policies', 'block_view', 'policy_jumpto_block');
