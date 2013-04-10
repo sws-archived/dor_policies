@@ -99,8 +99,6 @@
 		<?php print render($content['links']); ?><?php print render($content['comments']); ?>
 		
 		
-		<div #="back-to-top-link">Back to top</div>
-		
 	</div>
 </div>
 
