@@ -89,12 +89,11 @@
 	<?php print render($title_suffix); ?>
 	
 	<div class="content" <?php print $content_attributes; ?>>
-	<?php print render($content['field_policy_current_version']); ?>
+	<p>Last updated on: <?php print render($content['field_policy_current_version']); ?> </p>
+	<?php print render($content['field_policy_former_number']); ?>
 
 	<?php print render($content['body']); ?>
 
-	<?php print render($content['field_policy_former_number']); ?>
-	
 	<?php print render($content['field_policy_authority']); ?>
 	<?php print render($content['field_policy_applicability']); ?>
 	<?php print render($content['field_policy_responsibility']); ?>
