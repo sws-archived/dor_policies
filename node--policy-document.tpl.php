@@ -144,69 +144,6 @@
 
                  $subsection_child_i = 65;
 
-                 foreach ($item['field_policy_subsection_child']['#items'] as $l => $w) {
-
-                 		$child_item = $item['field_policy_subsection_child'][$l]['entity']['field_collection_item'][$w['value']];
-
-                 		print "<a name=\"anchor-" . $v['value']."\"></a>";
-
-                 		print "<div class=\"policy-subsection-child-container policy-subection-child-container-".$w['value']."\">";
-
-			                 print "<h3 class=\"policy-subsection-child-title\">";
-			                 print "<span class=\"prefix-container\">";
-			                 
-			                 if(!$hide_formatting){
-				                 print chr($subsection_child_i) .". ";
-				                }
-			                 
-			                 print "</span> ". (isset($child_item['field_policy_child_subtitle']['#items'][0]['value']) ? $child_item['field_policy_child_subtitle']['#items'][0]['value'] : "");
-			                 print "</h3>";
-
-                      if (isset($child_item['field_policy_child_body'])) {
-			                 print "<div class=\"policy-subsection-child-body\">";
-			                 print $child_item['field_policy_child_body']['#items'][0]['value'];
-			                 print "</div>";
-                      }
-
-			                  $grandchild_i = 1;
-
-			                  foreach ($child_item['field_policy_grandchildren']['#items'] as $m => $x) {
-
-			                 		$grandchild_item = $child_item['field_policy_grandchildren'][$m]['entity']['field_collection_item'][$x['value']];
-
-			                 		print "<a name=\"anchor-" . $v['value']."\"></a>";
-
-			                 		print "<div class=\"policy-subsection-grandchild-container policy-subection-grandchild-container-". $x['value'] ."\">";
-
-						                 print "<h4 class=\"policy-subsection-grandchild-title\">";
-						                 print "<span class=\"prefix-container\">";
-						                 
-						                 if(!$hide_formatting){
-							                 print $grandchild_i .". ";
-						                 }
-						                 
-						                 print "</span>". $grandchild_item['field_granchild_title']['#items'][0]['value'];
-						                 print "</h4>";
-
-						                 print "<div class=\"policy-subsection-grandchild-body\">";
-						                 print $grandchild_item['field_grandchild_body']['#items'][0]['value'];
-						                 print "</div>";
-
-				                  print "</div>";
-
-				                 $grandchild_i++;
-			                 }
-
-			                 if ($subsection_child_i < 90) {
-				                 $subsection_child_i++;
-			                 }
-			                 else{
-				                 $subsection_child_i = 65;
-			                 }
-
-	                  print "</div>";
-                 }
-
                
                 if (isset($item['field_policy_subsection_body'])) {
                  print '<p class="back-to-top"><a href="#main-content">Back to top</a></p>';
