@@ -89,7 +89,8 @@
 	<?php print render($title_suffix); ?>
 	
 	<div class="content" <?php print $content_attributes; ?>>
-	<p>Last updated on: <?php print render($content['field_policy_current_version']); ?> </p>
+	<div class="field-last-updated-on-prefix">Last updated on:</div>
+    <?php print render($content['field_policy_current_version']); ?>
 	<?php print render($content['field_policy_former_number']); ?>
 
 	<?php print render($content['body']); ?>
