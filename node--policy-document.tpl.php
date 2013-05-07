@@ -101,7 +101,6 @@
 	<?php print render($content['field_policy_statement']); ?>
 	<?php print render($content['field_policy_purpose']); ?>
 	<?php print render($content['field_policy_guide_supervisors']); ?>
-	<?php print render($content['field_policy_footnote']); ?>
 	<?php print render($content['field_policy_attachments']); ?>
 	<?php print render($content['field_policy_related']); ?>
 	<?php print render($content['field_auth_cont']); ?>
@@ -157,6 +156,7 @@
         }
 
         ?>
+  	<?php print render($content['field_policy_footnote']); ?>
 
 		<?php print render($content['links']); ?><?php print render($content['comments']); ?>
 
