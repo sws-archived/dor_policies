@@ -10,8 +10,8 @@
 function dor_policies_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: main-menu:policies
-  $menu_links['main-menu:policies'] = array(
+  // Exported menu link: main-menu_policies:policies
+  $menu_links['main-menu_policies:policies'] = array(
     'menu_name' => 'main-menu',
     'link_path' => 'policies',
     'router_path' => 'policies',
@@ -20,13 +20,15 @@ function dor_policies_menu_default_menu_links() {
       'attributes' => array(
         'title' => '',
       ),
+      'identifier' => 'main-menu_policies:policies',
     ),
     'module' => 'menu',
-    'hidden' => '0',
-    'external' => '0',
-    'has_children' => '1',
-    'expanded' => '0',
-    'weight' => '0',
+    'hidden' => 0,
+    'external' => 0,
+    'has_children' => 1,
+    'expanded' => 0,
+    'weight' => 0,
+    'customized' => 0,
   );
   // Translatables
   // Included for use with string extractors like potx.
